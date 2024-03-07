@@ -13,16 +13,20 @@ function TodoComponent() {
     isComplete: false,
   });
   const [data, setData] = useState([]);
+  const [index, setIndex] = useState(null);
+
+  console.log("Todo", newTodo);
 
   const handleChange = (e) => {
     setNewTodo((t) => ({
       ...t,
       [e.target.name]: e.target.value,
     }));
+    // console.log("Event", e);
   };
   // console.log(newTodo);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     // e.preventDefault();
     setData((prev) => [...prev, newTodo]);
     setNewTodo({ title: "", description: "", isComplete: false });
@@ -30,10 +34,19 @@ function TodoComponent() {
 
   const handleEdit = (index) => {
     console.log(data[index]);
-    setNewTodo(data[index])
+    setNewTodo(data[index]);
+    setIndex(index);
+  };
+  console.log("index: ", index);
+  const handleUpdate = () => {
+    data[index] = newTodo;
+    console.log("updated data", data);
+    console.log("Update");
+    setNewTodo({ title: "", description: "", isComplete: false });
+    setIndex(null);
   };
   const handleDelete = (index) => {
-    setData((prev) => prev.filter((_, i) => i !== index));
+    setData((prev) => prev.filter((t, i) => i !== index));
   };
   // console.log("Data", data);
   return (
@@ -86,7 +99,10 @@ function TodoComponent() {
               </form>
             </div>
 
-            <ButtonCom name="Submit" handleClick={handleSubmit} />
+            <ButtonCom
+              name={index !== null ? "Update" : "Submit"}
+              handleClick={index !== null ? handleUpdate : handleSubmit}
+            />
           </div>
         </div>
 
